@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SDMS — Sign in</title>
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body class="page-login">
+    <div class="login-shell">
+      <aside class="login-aside">
+        <div class="login-aside-inner">
+          <h1>Manage students, courses &amp; grades in one place</h1>
+          <p>
+            Role-based access for administrators, teachers, and students. Built for clarity and secure day-to-day academic
+            operations.
+          </p>
+          <ul class="login-features">
+            <li>Centralized records with attendance and marks</li>
+            <li>JWT authentication and audited sensitive actions</li>
+            <li>Clean dashboards tailored to each role</li>
+          </ul>
+        </div>
+      </aside>
+      <div class="login-wrap">
+        <div class="card login-card">
+          <span class="login-badge">Secure access</span>
+          <div class="brand">Student Database Management System</div>
+          <p class="hint">Sign in with your school account. Demo users are created by the seed script.</p>
+          <form id="login-form" class="mb-lg">
+            <div class="form-row">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="username" required />
+            </div>
+            <div class="form-row">
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" autocomplete="current-password" required />
+            </div>
+            <button class="btn" type="submit" id="btn-login">Sign in</button>
+            <p class="error hidden" id="login-error"></p>
+          </form>
+          <p class="login-footer">Protected with JWT · Passwords hashed with bcrypt</p>
+        </div>
+      </div>
+    </div>
+    <script src="js/api.js"></script>
+    <script>
+      (function () {
+        if (SDMS.getToken()) {
+          window.location.href = 'dashboard.html';
+          return;
+        }
+        var form = document.getElementById('login-form');
+        var err = document.getElementById('login-error');
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          err.classList.add('hidden');
+          var btn = document.getElementById('btn-login');
+          btn.disabled = true;
+          try {
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value;
+            var res = await SDMS.api('/api/auth/login', {
+              method: 'POST',
+              body: JSON.stringify({ email: email, password: password }),
+            });
+            SDMS.setToken(res.data.token);
+            SDMS.setUser(res.data.user);
+            window.location.href = 'dashboard.html';
+          } catch (x) {
+            err.textContent = x.message || 'Login failed';
+            err.classList.remove('hidden');
+          } finally {
+            btn.disabled = false;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

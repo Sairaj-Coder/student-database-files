@@ -1,0 +1,89 @@
+STUDENT DATABASE PROJECT - BASIC RUN STEPS
+=========================================
+
+1) Open terminal in project folder
+----------------------------------
+Path:
+F:\student database
+
+
+2) Install Node.js dependencies
+-------------------------------
+Command:
+npm install
+
+
+3) Configure environment file
+-----------------------------
+If .env does not exist, create it:
+Copy-Item .env.example .env
+
+In .env set your MySQL details:
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD="your_mysql_password"
+DB_NAME=student_db
+
+
+4) Seed database (creates DB/schema/sample data)
+------------------------------------------------
+Command:
+npm run seed
+
+Expected success lines:
+- Schema applied for database "student_db".   (first time only)
+- Seed completed.
+
+
+5) Start backend server
+-----------------------
+Command:
+npm start
+
+Server runs at:
+http://localhost:3000
+
+
+6) Login credentials
+--------------------
+Admin Email:
+sairajshirole2@gmail.com
+
+Admin Password:
+sairaj123
+
+
+7) Useful URLs
+--------------
+App login page:
+http://localhost:3000
+
+Health API:
+http://localhost:3000/api/health
+
+
+8) Common errors and quick fixes
+--------------------------------
+A) Error: "Access denied for user 'root'@'localhost' (using password: NO)"
+   Fix:
+   - Check DB_PASSWORD in .env
+   - Keep password in quotes if special characters exist
+   - Stop old node process and run npm start again
+
+B) Error: "Unknown database 'student_db'"
+   Fix:
+   - Run: npm run seed
+
+C) Error: "EADDRINUSE: address already in use :::3000"
+   Fix:
+   - Port 3000 already in use
+   - Close old server terminal/process
+   - Start again with npm start
+
+
+9) Daily quick start (after first setup)
+----------------------------------------
+Commands:
+npm run seed
+npm start
